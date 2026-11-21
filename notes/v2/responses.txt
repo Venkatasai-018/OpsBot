@@ -1,0 +1,56 @@
+[2026-11-22T02:47:50+05:30]
+Runbook: issue.txt
+The Jenkins disk space is at 95% capacity, which indicates a potential risk of failures due to insufficient storage. Possible RCA includes accumulation of build artifacts and logs over time without proper cleanup. Reach out to the solution architect or manager for guidance on managing disk space.
+Input tokens: 115
+Output tokens: 55
+Total tokens: 170
+------------------------------------------------------------
+[2026-11-22T02:48:52+05:30]
+Runbook: issue.txt
+The issue is that Jenkins disk space is at 95%, which could lead to system failures and broken builds. A potential root cause analysis (RCA) should focus on reviewing log files, build artifacts, and historical usage patterns to determine why disk space is being consumed rapidly. Please reach out to the solution architect or manager for further steps.
+Input tokens: 106
+Output tokens: 69
+Total tokens: 175
+------------------------------------------------------------
+[2026-11-22T02:49:49+05:30]
+Runbook: issue.txt
+Issue: The Jenkins disk is 95% full, which could cause job failures and slow performance. Possible RCA might involve accumulated build artifacts, logs, or old data not being cleaned up regularly. 
+
+Commands to check: "du -sh ." to review disk usage in directories and "find <jenkins-home> -type f -mtime +30 -exec rm {} \;" for identifying old files older than 30 days.
+Input tokens: 112
+Output tokens: 94
+Total tokens: 206
+------------------------------------------------------------
+[2026-11-22T02:51:03+05:30]
+Runbook: issue.txt
+Issue Might be: Insufficient disk space on the Jenkins server impacting its performance or functionality. Possible RCA: Accumulation of old build artifacts, logs, or plugins, or installation of unnecessary large plugins. To diagnose further, check disk usage by running `df -h` to verify if disk space is indeed the issue.
+Input tokens: 119
+Output tokens: 66
+Total tokens: 185
+------------------------------------------------------------
+[2026-11-22T02:51:59+05:30]
+Runbook: issue.txt
+Issue Might be: Jenkins disk space is approaching critical levels. Possible RCA includes: accumulation of old workspace data, build logs, or unused plugins/artifacts. To check, use `df -h` to monitor disk usage and `jenkinsctl status` to review disk space allocation.
+Input tokens: 137
+Output tokens: 58
+Total tokens: 195
+------------------------------------------------------------
+[2026-11-22T02:53:01+05:30]
+Runbook: issue.txt
+<OutputFormat>
+Issue Might be: Jenkins disk space is critically low, which could lead to build failures and system instability.
+
+Commands to check:
+1. `df -h` to confirm disk usage
+2. `du -sh /var/jenkins_home` to identify the space used by Jenkins
+3. `lsof | grep /var/jenkins_home` to see if any Jenkins processes are holding onto disk space
+</OutputFormat>
+
+Possible RCA:
+1. Build artifacts accumulation.
+2. Insufficient cleanup of old builds.
+</OutputFormat>
+Input tokens: 145
+Output tokens: 117
+Total tokens: 262
+------------------------------------------------------------

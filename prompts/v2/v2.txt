@@ -1,0 +1,11 @@
+<Task>Please identify the issue and suggest possible RCA </Task>
+
+Understand the issue first before answering
+
+<OutputFormat>
+ Issue Might be:
+
+ Commands to check:
+</OutputFormat>
+
+make sure i need all possible cases with commands to check and Issue might be and also make sure possible root cause analysis as well
