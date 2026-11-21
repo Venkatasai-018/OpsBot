@@ -1,0 +1,35 @@
+RUNBOOK: CRITICAL DISK SPACE
+============================
+
+PURPOSE
+Prevent service failure when a filesystem or persistent volume approaches capacity.
+
+TRIGGER
+- A disk or inode alert fires, writes fail, or a service reports a read-only/full filesystem.
+
+TRIAGE
+1. Identify the affected host, mount, volume, service, and remaining capacity. Check whether users or writes are affected.
+2. Inspect filesystem and inode usage:
+
+   df -h
+   df -i
+
+3. Find large directories on the affected filesystem (GNU/Linux example):
+
+   sudo du -xhd1 <mount-path> 2>/dev/null | sort -h
+
+4. Check for recent log growth, temporary files, backups, container images, or application data. Confirm retention and ownership before touching files.
+
+RESPONSE
+1. If logs are growing rapidly, use the service's log-rotation procedure or reduce verbosity through approved configuration. Do not delete active log files by hand.
+2. Remove only files confirmed as disposable and covered by the team's retention policy. Never remove unknown application data, database files, or backups to free space.
+3. If capacity must be expanded, use the approved volume-resize or storage-provisioning process and check quota and cost impact.
+4. If a database or persistent volume is near full, involve its owner before cleanup or resize. Preserve snapshots and backups.
+
+VERIFY RECOVERY
+- The affected filesystem has adequate free space and inodes.
+- The application can write and its health checks pass.
+- Disk usage is stable; the growth source is understood or being tracked.
+
+ESCALATE
+Escalate immediately if writes are failing, a database volume is involved, data deletion is being considered, or the cause of growth is unknown. Record the mount, usage, and largest directories without exposing sensitive file contents.

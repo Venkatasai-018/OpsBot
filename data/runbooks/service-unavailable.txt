@@ -1,0 +1,36 @@
+RUNBOOK: SERVICE UNAVAILABLE
+============================
+
+PURPOSE
+Restore service when users receive connection failures, timeouts, or HTTP 5xx responses.
+
+TRIGGER
+- An availability alert fires or multiple users report that the service cannot be reached.
+- Health checks fail or the service's 5xx/error rate rises above its normal baseline.
+
+TRIAGE
+1. Record the start time, affected service, environment, regions, and a representative error. Open or update the incident channel.
+2. Check whether the issue affects all users or only a region, tenant, endpoint, or dependency.
+3. Check the service dashboard, recent alerts, and deploy/change history. Compare error rate, latency, traffic, and dependency health.
+4. From an approved host, check the public health endpoint:
+
+   curl -i --max-time 5 https://<service-host>/<health-path>
+
+5. If the service runs on Kubernetes, inspect status and recent events:
+
+   kubectl get pods -n <namespace> -o wide
+   kubectl get events -n <namespace> --sort-by=.lastTimestamp
+
+RESPONSE
+1. If failures began after a deployment, pause further releases and follow the Deployment Failure runbook. Roll back only through the approved deployment process and with the incident lead's approval.
+2. If instances are unhealthy, inspect their logs and readiness/liveness checks. Correct the identified cause before restarting or replacing instances.
+3. If a dependency is failing, confirm its impact and use the service's documented fallback or circuit-breaker procedure. Do not repeatedly restart dependent services.
+4. If the issue is isolated to one region or instance pool, route traffic away only using the approved traffic-management procedure.
+
+VERIFY RECOVERY
+- Health checks pass from outside and inside the service boundary.
+- Error rate and latency return to baseline and remain stable for at least 10 minutes.
+- A representative user workflow succeeds; the incident lead confirms monitoring is clear.
+
+ESCALATE
+Escalate to the service owner and incident lead if the cause is unknown after 15 minutes, data integrity may be affected, or recovery requires a risky traffic or infrastructure change. Preserve relevant logs and timestamps.

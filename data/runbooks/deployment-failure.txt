@@ -1,0 +1,41 @@
+RUNBOOK: DEPLOYMENT FAILURE
+===========================
+
+PURPOSE
+Contain and recover from a release that fails, stalls, or causes a regression.
+
+TRIGGER
+- A build, test, migration, or deployment stage fails.
+- A rollout stalls or post-deployment health checks regress.
+- Error rate, latency, or user reports worsen shortly after a release.
+
+TRIAGE
+1. Stop or pause additional releases for the affected service and environment.
+2. Record the release identifier, commit, environment, time, pipeline stage, and exact error. Keep secrets out of incident notes.
+3. Compare service health before and after the change. Check deployment events, application logs, dependency status, and capacity.
+4. Determine whether the release changed application code, configuration, infrastructure, or database schema. Check whether any migration is backward-compatible.
+
+For Kubernetes deployments, read-only checks include:
+
+   kubectl rollout status deployment/<name> -n <namespace> --timeout=60s
+   kubectl describe deployment/<name> -n <namespace>
+   kubectl get pods -n <namespace> -l app=<label>
+
+RESPONSE
+1. If the failure is a pipeline/test issue and production is healthy, do not bypass the failed gate. Fix the issue and rerun the normal pipeline.
+2. If production is degraded, notify the incident lead and service owner. Use the approved rollback procedure to restore the last known-good release.
+3. Before rollback, check for database or configuration changes that make the prior version incompatible. Follow the migration-specific recovery plan; do not manually reverse schema changes.
+4. If rollback is unsafe or unavailable, stop the rollout and use the service's documented mitigation. Avoid ad hoc edits to live resources.
+
+Kubernetes rollback is an example only; confirm it matches the team's release process and obtain approval first:
+
+   kubectl rollout history deployment/<name> -n <namespace>
+   kubectl rollout undo deployment/<name> -n <namespace>
+
+VERIFY RECOVERY
+- The intended version is running and rollout status is complete.
+- Health checks, key user workflows, and service-level indicators are back to baseline.
+- No migration, queue, or configuration issue remains; monitor for at least 10 minutes.
+
+FOLLOW-UP
+Keep the failed release blocked until its cause is understood. Capture the pipeline link, relevant logs, and a concise timeline for the post-incident review.

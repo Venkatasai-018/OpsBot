@@ -1,0 +1,40 @@
+RUNBOOK: HIGH CPU OR MEMORY USAGE
+=================================
+
+PURPOSE
+Stabilize a service experiencing sustained CPU or memory pressure while preserving evidence and avoiding unnecessary restarts.
+
+TRIGGER
+- CPU or memory remains above its alert threshold or normal baseline.
+- Latency, error rate, restarts, or out-of-memory events increase alongside resource usage.
+
+TRIAGE
+1. Confirm the affected service, hosts/pods, environment, start time, and whether user impact is present.
+2. Compare current usage with traffic, request rate, queue depth, recent releases, and autoscaling events.
+3. On an approved Linux host, inspect processes and memory:
+
+   uptime
+   free -h
+   ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head
+   ps -eo pid,comm,%mem,%cpu --sort=-%mem | head
+
+4. If using Kubernetes, inspect pod-level usage and recent restarts:
+
+   kubectl top pods -n <namespace>
+   kubectl get pods -n <namespace> -o wide
+
+5. Check application logs for leaks, retry loops, unusually large jobs, or traffic spikes. Avoid collecting or posting sensitive request data.
+
+RESPONSE
+1. If a recent release correlates with the spike, follow the Deployment Failure runbook and consider an approved rollback.
+2. If load is legitimate and capacity is available, use the team's autoscaling or capacity procedure. Confirm cost and quota impact with the service owner.
+3. If a single job or consumer is responsible, pause or rate-limit it only through the documented control plane and with the owner informed.
+4. Do not kill processes, raise limits, or restart an entire fleet based only on a process list. Confirm the target and expected impact first.
+
+VERIFY RECOVERY
+- CPU and memory return to expected ranges without increasing errors or latency.
+- Restart and out-of-memory counts stop rising.
+- Capacity remains adequate under normal traffic for at least 10 minutes.
+
+ESCALATE
+Escalate to the service owner if pressure persists, the cause is unclear, scaling would exceed budget/quota, or data processing may be delayed or lost.

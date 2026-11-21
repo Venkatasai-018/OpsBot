@@ -1,0 +1,33 @@
+RUNBOOK: DATABASE CONNECTIVITY
+==============================
+
+PURPOSE
+Diagnose application failures connecting to a database without exposing credentials or making unapproved data-plane changes.
+
+TRIGGER
+- The application reports connection timeouts, authentication failures, or connection-pool exhaustion.
+- Database connectivity alerts fire or dependent services become unhealthy.
+
+TRIAGE
+1. Identify the affected application, database, environment, start time, and exact error category. Do not paste passwords, tokens, or full connection strings into tickets or chat.
+2. Check database service health, maintenance/failover events, connection counts, and the application's pool saturation metrics.
+3. From an approved application host, check DNS and network reachability. Substitute the actual hostname and port; these checks do not authenticate:
+
+   getent hosts <database-host>
+   nc -vz -w 3 <database-host> <port>
+
+4. Compare the deployed database endpoint, secret version reference, network policy/security group, and recent application or infrastructure changes with the known-good configuration. Never print secret values.
+
+RESPONSE
+1. If DNS or network reachability fails, involve the network/database owner and inspect the approved routing, firewall, and security-group changes.
+2. If connections are exhausted, identify the caller and pool behavior. Use the documented rate-limit or pool-recovery procedure; do not restart all application instances at once.
+3. If authentication fails, verify the secret reference and rotation status using the approved secret manager. Rotate or roll back credentials only through the coordinated credential-rotation procedure.
+4. If the database is unhealthy or failing over, follow the database provider's runbook. Do not promote replicas or modify replication settings without database-owner approval.
+
+VERIFY RECOVERY
+- A test connection from the application environment succeeds without exposing credentials.
+- Application connection errors and pool wait times return to baseline.
+- A representative read/write workflow succeeds, using an approved safe test record if needed.
+
+ESCALATE
+Escalate to the database owner if failover, data integrity, replication, credential rotation, or production writes are involved. Include timestamps, error categories, and affected services, but never include secret values.
