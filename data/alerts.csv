@@ -1,0 +1,21 @@
+alert_id,alert_name,priority,category,example_condition,evaluation_window,runbook_file
+ALT-001,Critical service error rate,P1,availability,"HTTP 5xx rate >10% while request volume is above the service minimum",5m,runbooks/service-unavailable.txt
+ALT-002,Public health checks failing,P1,availability,"All external health checks fail for the service",3 consecutive checks,runbooks/service-unavailable.txt
+ALT-003,Database connectivity unavailable,P1,database,"Database connection failures >5% or database health check is unavailable",5m,runbooks/database-connectivity.txt
+ALT-004,Critical filesystem capacity,P1,storage,"Free disk space <5% or <2 GiB on a production volume",5m,runbooks/disk-space-critical.txt
+ALT-005,Repeated out-of-memory kills,P1,resources,"At least 3 OOM kills for a critical service",5m,runbooks/high-resource-usage.txt
+ALT-006,Severely degraded deployment rollout,P1,deployment,"More than 50% of desired production replicas are unavailable during rollout",5m,runbooks/deployment-failure.txt
+ALT-007,Elevated service error rate,P2,availability,"HTTP 5xx rate >2% while request volume is above the service minimum",10m,runbooks/service-unavailable.txt
+ALT-008,High API latency,P2,latency,"API p95 latency exceeds the service SLO",10m,runbooks/service-unavailable.txt
+ALT-009,Sustained high CPU,P2,resources,"CPU utilization >85% on production instances or pods",15m,runbooks/high-resource-usage.txt
+ALT-010,High memory utilization,P2,resources,"Memory utilization >85% on production instances or pods",10m,runbooks/high-resource-usage.txt
+ALT-011,Low disk capacity,P2,storage,"Free disk space <20% on a production filesystem",10m,runbooks/disk-space-critical.txt
+ALT-012,Database connection pool near limit,P2,database,"Database connection pool utilization >80%",10m,runbooks/database-connectivity.txt
+ALT-013,Deployment rollout stalled,P2,deployment,"No increase in successfully updated replicas during an active rollout",10m,runbooks/deployment-failure.txt
+ALT-014,Repeated service restarts,P2,resources,"At least 3 restarts for the same production instance or pod",15m,runbooks/high-resource-usage.txt
+ALT-015,Disk usage trending high,P3,storage,"Filesystem utilization >70% and increasing",30m,runbooks/disk-space-critical.txt
+ALT-016,CPU above normal baseline,P3,resources,"CPU utilization >70% and above the normal service baseline",30m,runbooks/high-resource-usage.txt
+ALT-017,Database pool usage elevated,P3,database,"Database connection pool utilization >65%",30m,runbooks/database-connectivity.txt
+ALT-018,Minor service error increase,P3,availability,"HTTP 5xx rate >1% and above the normal service baseline",30m,runbooks/service-unavailable.txt
+ALT-019,Non-production deployment failure,P3,deployment,"A deployment pipeline fails in a non-production environment",1 failed run,runbooks/deployment-failure.txt
+ALT-020,Single-instance health check flapping,P3,availability,"One instance intermittently fails health checks while service-level health remains normal",10m,runbooks/service-unavailable.txt
